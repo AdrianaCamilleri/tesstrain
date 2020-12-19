@@ -1,3 +1,5 @@
+# Checkpoint naming was different for 4.1.0-rc1 and earlier.
+# This makefile supports the old format.
 
 TRAIN41PATH=/home/ubuntu/tesseract-4.1.0-rc1/src/training/
 
@@ -82,7 +84,7 @@ $(TMP_100_ITERATIONS): $(MODEL_LOG)
 		| sed -e 's/At iteration \([0-9]*\)\/\([0-9]*\)\/.*char train=/\t\t\1\t\2\t\t/' \
 		| sed -e 's/%, word.*/\t/' >  "$@"
 
-# Make TSV with Checkpoint CER. Format is different for 4.1.
+# Make TSV with Checkpoint CER. Format is different for 4.1.0.
 $(TMP_CHECKPOINT): $(MODEL_LOG)
 	@grep 'best model' $(MODEL_LOG) \
 		| sed -e 's/^.*\///' \
@@ -122,7 +124,7 @@ $(TMP_FAST_LOG): $(TMP_FAST_LOG_FILES)
 $(TSV_VALIDATE_CER): $(TMP_TSV_CER) $(TMP_FAST_LOG)
 # Validation log is generated only when CER falls below $(VALIDATE_CER)].[0-9], so check for file existence.
 # Extract Filename and CER from Validate log for building Validate TSV file.
-# Make TSV with Validate CER.
+# Make TSV with Validate CER. Note 4.1.0 Checkpoint naming format is different.
 # Combine TSV files with all required CER values, generated from training log and validation logs. Plot.
 	@if [ ! -s $(TMP_FAST_LOG) ]; \
 	then \
@@ -133,7 +135,7 @@ $(TSV_VALIDATE_CER): $(TMP_TSV_CER) $(TMP_FAST_LOG)
 			| grep 'Eval Char' \
 			| sed -e "s/.$(VALIDATE_LIST).log.*Eval Char error rate=/\t\t\t/" \
 			| sed -e 's/, Word.*$$//' \
-			| sed -e 's/\(^.*\)_\([0-9].*\)_\([0-9].*\)_\([0-9].*\)\t/\1\t\2\t\3\t\4\t/g' > $(TMP_VALIDATE) ;\
+			| sed -e 's/\(^.*$(MODEL_NAME)\)\([0-9].*\)_\([0-9].*\)\t/\1\t\2\t\3\t\t/g' > $(TMP_VALIDATE) ;\
 		cat $(TMP_TSV_CER) $(TMP_VALIDATE) > $(TSV_VALIDATE_CER) ;\
 	fi;
 	python plot-eval-validate-cer.py -m $(MODEL_NAME)  -v $(VALIDATE_LIST)
