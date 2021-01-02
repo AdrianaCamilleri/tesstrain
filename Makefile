@@ -52,8 +52,16 @@ TESSDATA_REPO = _best
 # Ground truth directory. Default: $(GROUND_TRUTH_DIR)
 GROUND_TRUTH_DIR := $(OUTPUT_DIR)-ground-truth
 
+# Epochs. Default: $(EPOCHS)
+EPOCHS := 0
+
 # Max iterations. Default: $(MAX_ITERATIONS)
+ifeq ($(EPOCHS),0)
 MAX_ITERATIONS := 10000
+else
+MAX_ITERATIONS := $(($(EPOCHS) * $(wc -l < $(OUTPUT_DIR)/list.train))
+MAX_ITERATIONS := $(shell echo $$(($(EPOCHS) * $$(wc -l < $(OUTPUT_DIR)/list.train))))
+endif
 
 # Debug Interval. Default:  $(DEBUG_INTERVAL)
 DEBUG_INTERVAL := 0
@@ -85,6 +93,26 @@ else
 	NORM_MODE =2
 	RECODER=
 	GENERATE_BOX_SCRIPT =generate_line_box.py
+endif
+endif
+
+# Training Type with START_MODEL - Impact, Layer or blank => PlusMinus. Default: '$(TRAIN_TYPE)'
+TRAIN_TYPE ?=
+
+# Impact, Replace top layer of network OR plus_minus training
+ifeq ($(TRAIN_TYPE),Impact)
+	START_MODEL_STRING =--traineddata $(TESSDATA)/$(START_MODEL).traineddata
+	START_MODEL_TRAIN_STRING =
+	UNICHARSET =$(OUTPUT_DIR)/unicharset
+else
+ifeq ($(TRAIN_TYPE),Layer)
+	START_MODEL_STRING =--traineddata $(PROTO_MODEL)
+	START_MODEL_TRAIN_STRING =--append_index 5 --net_spec '[Lfx192O1c1]'
+	UNICHARSET =$(OUTPUT_DIR)/my.unicharset
+else
+	START_MODEL_STRING =--traineddata $(PROTO_MODEL)
+	START_MODEL_TRAIN_STRING =--old_traineddata $(TESSDATA)/$(START_MODEL).traineddata
+	UNICHARSET =$(OUTPUT_DIR)/unicharset
 endif
 endif
 
@@ -140,6 +168,7 @@ help:
 	@echo "    LEARNING_RATE      Learning rate. Default: $(LEARNING_RATE)"
 	@echo "    NET_SPEC           Network specification. Default: $(NET_SPEC)"
 	@echo "    LANG_TYPE          Language Type - Indic, RTL or blank. Default: '$(LANG_TYPE)'"
+	@echo "    TRAIN_TYPE         Training Type with START_MODEL - Impact, Layer or blank. Default: '$(TRAIN_TYPE)'"
 	@echo "    PSM                Page segmentation mode. Default: $(PSM)"
 	@echo "    RANDOM_SEED        Random seed for shuffling of the training data. Default: $(RANDOM_SEED)"
 	@echo "    RATIO_TRAIN        Ratio of train / eval training data. Default: $(RATIO_TRAIN)"
@@ -242,13 +271,13 @@ $(OUTPUT_DIR)/tessdata_best/%.traineddata: $(OUTPUT_DIR)/checkpoints/%.checkpoin
 	lstmtraining \
           --stop_training \
           --continue_from $< \
-          --traineddata $(PROTO_MODEL) \
+          $(START_MODEL_STRING) \
           --model_output $@
 $(OUTPUT_DIR)/tessdata_fast/%.traineddata: $(OUTPUT_DIR)/checkpoints/%.checkpoint
 	lstmtraining \
           --stop_training \
           --continue_from $< \
-          --traineddata $(PROTO_MODEL) \
+          $(START_MODEL_STRING) \
           --convert_to_int \
           --model_output $@
 
@@ -257,7 +286,7 @@ proto-model: $(PROTO_MODEL)
 
 $(PROTO_MODEL): $(OUTPUT_DIR)/unicharset $(DATA_DIR)/radical-stroke.txt
 	combine_lang_model \
-	  --input_unicharset $(OUTPUT_DIR)/unicharset \
+	  --input_unicharset $(UNICHARSET) \
 	  --script_dir $(DATA_DIR) \
 	  --numbers $(NUMBERS_FILE) \
 	  --puncs $(PUNC_FILE) \
@@ -270,40 +299,42 @@ ifdef START_MODEL
 $(LAST_CHECKPOINT): unicharset lists $(PROTO_MODEL)
 	@mkdir -p $(OUTPUT_DIR)/checkpoints
 	lstmtraining \
-	  --debug_interval $(DEBUG_INTERVAL) \
-	  --traineddata $(PROTO_MODEL) \
-	  --old_traineddata $(TESSDATA)/$(START_MODEL).traineddata \
+	  $(START_MODEL_STRING) \
+	  $(START_MODEL_TRAIN_STRING) \
 	  --continue_from $(DATA_DIR)/$(START_MODEL)/$(MODEL_NAME).lstm \
 	  --learning_rate $(LEARNING_RATE) \
 	  --model_output $(OUTPUT_DIR)/checkpoints/$(MODEL_NAME) \
 	  --train_listfile $(OUTPUT_DIR)/list.train \
 	  --eval_listfile $(OUTPUT_DIR)/list.eval \
 	  --max_iterations $(MAX_ITERATIONS) \
+	  --debug_interval $(DEBUG_INTERVAL) \
+	  --sequential_training \
 	  --target_error_rate $(TARGET_ERROR_RATE)
 $(OUTPUT_DIR).traineddata: $(LAST_CHECKPOINT)
 	lstmtraining \
 	--stop_training \
 	--continue_from $(LAST_CHECKPOINT) \
-	--traineddata $(PROTO_MODEL) \
+	  $(START_MODEL_STRING) \
 	--model_output $@
 else
 $(LAST_CHECKPOINT): unicharset lists $(PROTO_MODEL)
 	@mkdir -p $(OUTPUT_DIR)/checkpoints
 	lstmtraining \
-	  --debug_interval $(DEBUG_INTERVAL) \
-	  --traineddata $(PROTO_MODEL) \
+	  $(START_MODEL_STRING) \
 	  --learning_rate $(LEARNING_RATE) \
 	  --net_spec "$(subst c###,c`head -n1 $(OUTPUT_DIR)/unicharset`,$(NET_SPEC))" \
 	  --model_output $(OUTPUT_DIR)/checkpoints/$(MODEL_NAME) \
 	  --train_listfile $(OUTPUT_DIR)/list.train \
 	  --eval_listfile $(OUTPUT_DIR)/list.eval \
 	  --max_iterations $(MAX_ITERATIONS) \
+	  --debug_interval $(DEBUG_INTERVAL) \
+	  --sequential_training \
 	  --target_error_rate $(TARGET_ERROR_RATE)
 $(OUTPUT_DIR).traineddata: $(LAST_CHECKPOINT)
 	lstmtraining \
 	--stop_training \
 	--continue_from $(LAST_CHECKPOINT) \
-	--traineddata $(PROTO_MODEL) \
+	$(START_MODEL_STRING) \
 	--model_output $@
 endif
 

@@ -1,0 +1,183 @@
+Name	CheckpointCER	LearningIteration	TrainingIteration	EvalCER	IterationCER	ValidationCER
+		92	100		10	
+		189	200		10.793	
+		280	300		9.95	
+		361	400		9.582	
+		447	500		9.103	
+		531	600		8.813	
+		618	700		8.501	
+		706	800		8.331	
+		786	900		8.122	
+		867	1000		7.866	
+		945	1100		7.341	
+		1027	1200		6.886	
+		1106	1300		6.603	
+		1185	1400		6.221	
+		1262	1500		6.034	
+		1339	1600		5.78	
+		1411	1700		5.718	
+		1475	1800		5.328	
+		1546	1900		5.162	
+		1622	2000		5.029	
+		1690	2100		5.143	
+		1763	2200		4.832	
+		1829	2300		4.694	
+		1894	2400		4.626	
+		1963	2500		4.553	
+		2026	2600		4.453	
+		2082	2700		4.201	
+		2148	2800		4.227	
+		2215	2900		4.217	
+		2281	3000		4.136	
+		2343	3100		3.883	
+		2406	3200		3.861	
+		2469	3300		3.74	
+		2529	3400		3.736	
+		2576	3500		3.519	
+		2628	3600		3.458	
+		2685	3700		3.389	
+		2738	3800		3.437	
+		2791	3900		3.254	
+		2850	4000		3.191	
+		2903	4100		3.131	
+		2955	4200		3.058	
+		3002	4300		3.05	
+		3044	4400		2.873	
+		3099	4500		2.882	
+		3144	4600		2.864	
+		3195	4700		2.885	
+		3243	4800		2.746	
+		3296	4900		2.694	
+		3338	5000		2.588	
+		3389	5100		2.628	
+		3422	5200		2.494	
+		3466	5300		2.46	
+		3512	5400		2.446	
+		3559	5500		2.478	
+		3599	5600		2.4	
+		3648	5700		2.322	
+		3689	5800		2.282	
+		3735	5900		2.247	
+		3778	6000		2.293	
+		3813	6100		2.164	
+		3856	6200		2.175	
+		3900	6300		2.163	
+		3946	6400		2.203	
+		3985	6500		2.121	
+		4031	6600		2.098	
+		4071	6700		2.026	
+		4118	6800		2.034	
+		4147	6900		1.956	
+		4183	7000		1.905	
+		4223	7100		1.882	
+		4261	7200		1.883	
+		4301	7300		1.863	
+		4346	7400		1.814	
+		4386	7500		1.8	
+		4424	7600		1.735	
+		4464	7700		1.782	
+		4496	7800		1.69	
+		4533	7900		1.712	
+		4569	8000		1.704	
+		4610	8100		1.732	
+		4648	8200		1.728	
+		4685	8300		1.687	
+		4720	8400		1.62	
+		4765	8500		1.63	
+		4793	8600		1.591	
+		4823	8700		1.526	
+		4858	8800		1.543	
+		4897	8900		1.56	
+		4935	9000		1.574	
+		4973	9100		1.537	
+		5011	9200		1.545	
+		5042	9300		1.498	
+		5080	9400		1.542	
+		5105	9500		1.439	
+		5134	9600		1.453	
+		5166	9700		1.499	
+		5200	9800		1.494	
+		5231	9900		1.474	
+		5270	10000		1.472	
+Name	CheckpointCER	LearningIteration	TrainingIteration	EvalCER	IterationCER	ValidationCER
+ben	10	92	100			
+ben	9.582	361	400			
+ben	9.103	447	500			
+ben	8.813	531	600			
+ben	8.501	618	700			
+ben	8.122	786	900			
+ben	7.866	867	1000			
+ben	7.341	945	1100			
+ben	6.886	1027	1200			
+ben	6.603	1106	1300			
+ben	6.221	1185	1400			
+ben	5.78	1339	1600			
+ben	5.328	1475	1800			
+ben	5.029	1622	2000			
+ben	4.832	1763	2200			
+ben	4.626	1894	2400			
+ben	4.453	2026	2600			
+ben	4.201	2082	2700			
+ben	3.883	2343	3100			
+ben	3.74	2469	3300			
+ben	3.519	2576	3500			
+ben	3.389	2685	3700			
+ben	3.254	2791	3900			
+ben	3.131	2903	4100			
+ben	2.873	3044	4400			
+ben	2.746	3243	4800			
+ben	2.588	3338	5000			
+ben	2.494	3422	5200			
+ben	2.4	3599	5600			
+ben	2.322	3648	5700			
+ben	2.247	3735	5900			
+ben	2.164	3813	6100			
+ben	2.026	4071	6700			
+ben	1.956	4147	6900			
+ben	1.882	4223	7100			
+ben	1.814	4346	7400			
+ben	1.735	4424	7600			
+ben	1.62	4720	8400			
+ben	1.526	4823	8700			
+ben	1.439	5105	9500			
+Name	CheckpointCER	LearningIteration	TrainingIteration	EvalCER	IterationCER	ValidationCER
+Name	CheckpointCER	LearningIteration	TrainingIteration	EvalCER	IterationCER	ValidationCER
+Filename : ../data/ben/tessdata_fast/ben	9.582	361	400			7.1559805
+Filename : ../data/ben/tessdata_fast/ben	9.103	447	500			7.1228314
+Filename : ../data/ben/tessdata_fast/ben	8.813	531	600			6.9470989
+Filename : ../data/ben/tessdata_fast/ben	8.501	618	700			7.1712995
+Filename : ../data/ben/tessdata_fast/ben	8.122	786	900			5.9750129
+Filename : ../data/ben/tessdata_fast/ben	7.866	867	1000			6.4758852
+Filename : ../data/ben/tessdata_fast/ben	7.341	945	1100			6.4302858
+Filename : ../data/ben/tessdata_fast/ben	6.886	1027	1200			6.5444472
+Filename : ../data/ben/tessdata_fast/ben	6.603	1106	1300			6.5583783
+Filename : ../data/ben/tessdata_fast/ben	6.221	1185	1400			6.3605033
+Filename : ../data/ben/tessdata_fast/ben	5.780	1339	1600			5.7037273
+Filename : ../data/ben/tessdata_fast/ben	5.328	1475	1800			5.6289538
+Filename : ../data/ben/tessdata_fast/ben	5.029	1622	2000			5.9519804
+Filename : ../data/ben/tessdata_fast/ben	4.832	1763	2200			5.9382082
+Filename : ../data/ben/tessdata_fast/ben	4.626	1894	2400			6.1702669
+Filename : ../data/ben/tessdata_fast/ben	4.453	2026	2600			5.2703496
+Filename : ../data/ben/tessdata_fast/ben	4.201	2082	2700			5.5870473
+Filename : ../data/ben/tessdata_fast/ben	3.883	2343	3100			5.0809797
+Filename : ../data/ben/tessdata_fast/ben	3.740	2469	3300			5.2912097
+Filename : ../data/ben/tessdata_fast/ben	3.519	2576	3500			5.4674895
+Filename : ../data/ben/tessdata_fast/ben	3.389	2685	3700			4.6561242
+Filename : ../data/ben/tessdata_fast/ben	3.254	2791	3900			5.2584857
+Filename : ../data/ben/tessdata_fast/ben	3.131	2903	4100			4.4419919
+Filename : ../data/ben/tessdata_fast/ben	2.873	3044	4400			4.8645727
+Filename : ../data/ben/tessdata_fast/ben	2.746	3243	4800			4.825943
+Filename : ../data/ben/tessdata_fast/ben	2.588	3338	5000			5.2852314
+Filename : ../data/ben/tessdata_fast/ben	2.494	3422	5200			4.2142929
+Filename : ../data/ben/tessdata_fast/ben	2.400	3599	5600			5.1588817
+Filename : ../data/ben/tessdata_fast/ben	2.322	3648	5700			4.9695628
+Filename : ../data/ben/tessdata_fast/ben	2.247	3735	5900			4.6095887
+Filename : ../data/ben/tessdata_fast/ben	2.164	3813	6100			4.664595
+Filename : ../data/ben/tessdata_fast/ben	2.026	4071	6700			4.5803012
+Filename : ../data/ben/tessdata_fast/ben	1.956	4147	6900			4.7927323
+Filename : ../data/ben/tessdata_fast/ben	1.882	4223	7100			5.454794
+Filename : ../data/ben/tessdata_fast/ben	1.814	4346	7400			4.7913342
+Filename : ../data/ben/tessdata_fast/ben	1.735	4424	7600			5.042389
+Filename : ../data/ben/tessdata_fast/ben	1.620	4720	8400			5.0049192
+Filename : ../data/ben/tessdata_fast/ben	1.526	4823	8700			5.394581
+Filename : ../data/ben/tessdata_fast/ben	1.439	5105	9500			5.3834916
