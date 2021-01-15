@@ -10,14 +10,14 @@ from scipy.interpolate import UnivariateSpline
 
 arg_parser = argparse.ArgumentParser(
     '''Creates plot from Training and Evaluation Character Error Rates''')
-
 arg_parser.add_argument('-m', '--model', nargs='?',
                         metavar='MODEL_NAME', help='Model Name', required=True)
-
 arg_parser.add_argument('-v', '--validatelist', nargs='?', metavar='VALIDATELIST',
                         help='Validate List Suffix', required=True)
-
 args = arg_parser.parse_args()
+
+maxticks=10
+maxy=10
 
 ytsvfile = "tmp-" + args.model + "-" + args.validatelist + "-iteration.tsv"
 ctsvfile = "tmp-" + args.model + "-" + args.validatelist + "-checkpoint.tsv"
@@ -30,16 +30,20 @@ cdf = pd.read_csv(ctsvfile,sep='\t', encoding='utf-8')
 edf = pd.read_csv(etsvfile,sep='\t', encoding='utf-8')
 vdf = pd.read_csv(vtsvfile,sep='\t', encoding='utf-8')
 
-t = ydf['TrainingIteration']
-x = ydf['LearningIteration']
-y = ydf['IterationCER']
+ydf = ydf.sort_values('LearningIteration')
+cdf = cdf.sort_values('LearningIteration')
+edf = edf.sort_values('LearningIteration')
+vdf = vdf.sort_values('LearningIteration')
 
+y = ydf['IterationCER']
+x = ydf['LearningIteration']
+t = ydf['TrainingIteration']
 c = cdf['CheckpointCER']
 cx = cdf['LearningIteration']
 ct = cdf['TrainingIteration']
 e = edf['EvalCER']
 ex = edf['LearningIteration']
-et = edf['TrainingIteration'] # Not available in log file
+et = edf['TrainingIteration'] # Not available in training log file
 v = vdf['ValidationCER']
 vx = vdf['LearningIteration']
 vt = vdf['TrainingIteration']
@@ -52,8 +56,6 @@ trainlistlinecount = len(open(trainlistfile).readlines(  ))
 evallistlinecount = len(open(evalistfile).readlines(  ))
 validatelistlinecount = len(open(validatelistfile).readlines(  ))
 
-maxticks=10
-
 def annot_min(boxcolor, xpos, ypos, x, y, z):
     if z.isnull().values.any():
           xmin = x[np.argmin(y)]
@@ -65,8 +67,8 @@ def annot_min(boxcolor, xpos, ypos, x, y, z):
           ymin = y.min()
           boxtext= "{:.3f}%  CER\n  at {:.0f} / {:.0f} iterations" .format(ymin,xmin,tmin)
     ax1.annotate(boxtext, xy=(xmin, ymin), xytext=(xpos,ypos), textcoords='offset points',
-        arrowprops=dict(shrinkA=1, shrinkB=1, fc=boxcolor,alpha=0.5, ec='white', connectionstyle="arc3"),
-        bbox=dict(boxstyle='round,pad=0.2', fc=boxcolor, alpha=0.5))
+        arrowprops=dict(shrinkA=1, shrinkB=1, fc=boxcolor,alpha=0.3, ec='white', connectionstyle="arc3"),
+        bbox=dict(boxstyle='round,pad=0.2', fc=boxcolor, alpha=0.3))
 
 PlotTitle="Tesseract LSTM Training - Model Name = " + args.model + ", Validation List = list." + args.validatelist
 fig = plt.figure(figsize=(11,8.5)) #size is in inches
@@ -82,7 +84,7 @@ ax1.tick_params(axis='x', rotation=45, labelsize='small')
 ax1.locator_params(axis='x', nbins=maxticks)  # limit ticks on x-axis
 ax1.grid(True)
 
-ax1.scatter(x, y, c='teal', s=1, label='CER every 100 Training Iterations')
+ax1.scatter(x, y, c='teal', alpha=0.5, s=0.5, label='CER every 100 Training Iterations')
 ax1.plot(x, y, 'teal', alpha=0.5, linewidth=0.5, label='Training CER')
 
 if not v.dropna().empty: # not NaN or empty
@@ -99,7 +101,6 @@ if not e.dropna().empty: # not NaN or empty
     str(evallistlinecount) +' lines)', alpha=0.5)
 	annot_min('magenta',-30,30,ex,e,et)
 
-
 if not c.dropna().empty: # not NaN or empty
 	ax1.scatter(cx, c, c='blue', s=12,
     label='Checkpoints CER  from lstmtraining (list.train - ' +
@@ -107,27 +108,17 @@ if not c.dropna().empty: # not NaN or empty
 	annot_min('blue',-30,-40,cx,c,ct)
 
 ax1.set_xlim([0,None])
-ax1.set_ylim([-1,None])
+ax1.set_ylim([-1,maxy])
 
-# Best fit curve for training data every 100 iterations, using spline
-spliney = UnivariateSpline(x, y)
-yxs = np.linspace(x.min(), x.max(), 50)
-ysy = spliney(yxs)
-ax1.plot(yxs, ysy, 'teal', alpha=0.5)
+def fit_spline(splinex, spliney, splinedf, splines, splinecolor):
+	if not spliney.dropna().empty: 
+		uni = UnivariateSpline(splinex, spliney, s=splines)
+		yxs = np.linspace(splinex.min(), splinex.max(), len(splinedf.index))
+		ax1.plot(yxs, uni(yxs), splinecolor, alpha=0.5)
 
-# Best fit curve for eval data using spline
-if not e.dropna().empty: # not NaN or empty
-	splinee = UnivariateSpline(ex, e)
-	exs = np.linspace(ex.min(), ex.max(), 50)
-	ese = splinee(exs)
-	ax1.plot(exs, ese, 'magenta', alpha=0.5)
-
-# Best fit curve for validation data using spline
-if not v.dropna().empty: # not NaN or empty
-	splinev = UnivariateSpline(vx, v)
-	vxs = np.linspace(vx.min(), vx.max(), 50)
-	vsv = splinev(vxs)
-	ax1.plot(vxs, vsv, 'maroon', alpha=0.5)
+fit_spline(x, y, ydf, 500, 'teal')
+fit_spline(ex, e, edf, 5, 'magenta')
+fit_spline(vx, v, vdf, 6, 'maroon')
 
 plt.title(label=PlotTitle)
 plt.legend(loc='upper right')

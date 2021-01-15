@@ -114,7 +114,7 @@ FAST_LOG_FILES := $(subst tessdata_fast,tessdata_fast,$(patsubst %.traineddata,%
 #	Hence `make` needs to be run twice to generate new validate.log files.
 
 $(FAST_LOG_FILES): %.$(VALIDATE_LIST).log: %.traineddata
-	OMP_THREAD_LIMIT=1 lstmeval  \
+	OMP_THREAD_LIMIT=1 time -p lstmeval  \
 		--verbosity=0 \
 		--model $< \
 		--eval_listfile $(TMP_VALIDATE_LIST) 2>&1 | grep -v ^Loaded | grep -v ^Warning > $@
